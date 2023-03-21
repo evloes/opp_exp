@@ -536,7 +536,7 @@ trellis= alt.Chart(source).mark_area().encode(
     color="source:N",
     row="source:N"
 ).properties(
-    height=100
+    height=80
     , width = 80
 )
 
@@ -690,14 +690,15 @@ with tab3:
     col1, col2  = st.columns(2)
     with col1:
         #st.selectbox("City", ["City1", "City2"])
-        st.text('Trellis Area Chart')
-        st.altair_chart(trellis, theme= "streamlit", use_container_width=True)
+        #st.text('Trellis Area Chart')
+        #st.altair_chart(trellis, theme= "streamlit", use_container_width=True)
+        st.text('Divergin')
+        st.altair_chart(divergin, theme= "streamlit", use_container_width=True)
     with col2:
         #st.selectbox("District", ["District1", "District2"])
         st.text('Heat Map')
         st.altair_chart(heat, theme= "streamlit", use_container_width=True)
-        st.text('Divergin')
-        st.altair_chart(divergin, theme= "streamlit", use_container_width=True)
+        
         
     
         
