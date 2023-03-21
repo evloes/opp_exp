@@ -119,7 +119,7 @@ text2 = bars2.mark_text(
 #Bar 3 - Omni-channel  Reach
 #omni_channel_reach = pd.read_csv('tableau_data/Omni-Channel Reach.csv', encoding='utf_16', sep = "\t" )
 omni_channel_reach = pd.DataFrame({"Field": ['omni-chnnel','omni-chnnel', 'omni-chnnel' , 'omni-chnnel']
-    ,"Field metric": ['Email', 'Programmatic', 'Social', 'Direct Mail']
+                                   ,"Field metric": ['Email', 'Programmatic', 'Social', 'Direct Mail']
                                    , "Value": [40, 50, 30, 20] 
                                    , 'Percent' :[0.4,0.5,0.3,0.2]})
 
@@ -132,7 +132,7 @@ bars3 = alt.Chart(omni_channel_reach).transform_joinaggregate(
 ).mark_bar(size=30).encode(
 alt.X('Field metric:N', axis=alt.Axis(labelAngle=0)),
 alt.Y('PercentOfTotal:Q', axis=alt.Axis(format='.0%', title='Match Count')),
-alt.Color("Field Metric:N", legend=None, scale=alt.Scale(scheme='set1'))
+alt.Color("Field metric:N", legend=None, scale=alt.Scale(scheme='set1'))
 
 ).properties(
 width=alt.Step(200) # controls width of bar.
