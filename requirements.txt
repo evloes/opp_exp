@@ -3,7 +3,7 @@ streamlit
 pandas
 numpy
 matplotlib
-
+vega_datasets
 matplotlib-inline
 matplotlib-venn
 openpyxl
