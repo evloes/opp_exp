@@ -69,12 +69,12 @@ match_breakdown = pd.DataFrame({"Field": ['Match Breakdown', 'Match Breakdown', 
                                 ,"Field metric": ["Email","Full Name + Full Postal", "Phone"]
                                 ,"Percent" :[0.6, 0.5, 0.4]
                                 ,"Value": [60, 50, 40]})
-bars1 = alt.Chart(match_breakdown).mark_bar().encode(
+bars1 = alt.Chart(match_breakdown).mark_bar(size=30).encode(
         x= alt.X('Field metric:N',axis=alt.Axis(labelAngle=0)),
         y=alt.Y('Value:Q', axis=alt.Axis(title='Match Count')),
         color= alt.Color("Field metric:N", legend = None, scale=alt.Scale(scheme='accent'))
         ).properties(
-    width=alt.Step(100) # controls width of bar.
+    width=alt.Step(200) # size controls width of bar. and width allocates for each bar in the chart the width
     #, height=500  # height of the table
 )
 text1 = bars1.mark_text(
@@ -97,13 +97,13 @@ bars2 = alt.Chart(data_signal_matches).transform_joinaggregate(
     TotalValue='sum(Value)',
 ).transform_calculate(
     PercentOfTotal="datum.Value / datum.TotalValue"
-).mark_bar().encode(
+).mark_bar(size = 30).encode(
 alt.X('Field metric:N', axis=alt.Axis(labelAngle=0)),
 alt.Y('PercentOfTotal:Q', axis=alt.Axis(format='.0%', title='Match Count')),
 alt.Color("Field metric:N", legend=None, scale=alt.Scale(scheme='category10'))
 
 ).properties(
-width=alt.Step(100) # controls width of bar.
+width=alt.Step(200) # controls width of bar.
     #, height=500  # height of the table
         
 )
@@ -118,7 +118,8 @@ text2 = bars2.mark_text(
 
 #Bar 3 - Omni-channel  Reach
 #omni_channel_reach = pd.read_csv('tableau_data/Omni-Channel Reach.csv', encoding='utf_16', sep = "\t" )
-omni_channel_reach = pd.DataFrame({"Field metric": ['Email', 'Programmatic', 'Social', 'Direct Mail']
+omni_channel_reach = pd.DataFrame({"Field": ['omni-chnnel','omni-chnnel', 'omni-chnnel' , 'omni-chnnel']
+    ,"Field metric": ['Email', 'Programmatic', 'Social', 'Direct Mail']
                                    , "Value": [40, 50, 30, 20] 
                                    , 'Percent' :[0.4,0.5,0.3,0.2]})
 
@@ -128,13 +129,13 @@ bars3 = alt.Chart(omni_channel_reach).transform_joinaggregate(
     TotalValue='sum(Value)',
 ).transform_calculate(
     PercentOfTotal="datum.Value / datum.TotalValue"
-).mark_bar().encode(
+).mark_bar(size=30).encode(
 alt.X('Field metric:N', axis=alt.Axis(labelAngle=0)),
 alt.Y('PercentOfTotal:Q', axis=alt.Axis(format='.0%', title='Match Count')),
 alt.Color("Field Metric:N", legend=None, scale=alt.Scale(scheme='set1'))
 
 ).properties(
-width=alt.Step(100) # controls width of bar.
+width=alt.Step(200) # controls width of bar.
     #, height=500  # height of the table
         
 )
@@ -536,6 +537,7 @@ trellis= alt.Chart(source).mark_area().encode(
     row="source:N"
 ).properties(
     height=100
+    , width = 100
 )
 
 #Layered
