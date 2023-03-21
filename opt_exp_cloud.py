@@ -103,7 +103,7 @@ alt.Y('PercentOfTotal:Q', axis=alt.Axis(format='.0%', title='Match Count')),
 alt.Color("Field metric:N", legend=None, scale=alt.Scale(scheme='category10'))
 
 ).properties(
-width=alt.Step(200) # controls width of bar.
+width=alt.Step(150) # controls width of bar.
     #, height=500  # height of the table
         
 )
@@ -537,7 +537,7 @@ trellis= alt.Chart(source).mark_area().encode(
     row="source:N"
 ).properties(
     height=100
-    , width = 100
+    , width = 80
 )
 
 #Layered
