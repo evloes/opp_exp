@@ -725,14 +725,15 @@ with tab5:
     with col1:
         st.text('Multifeature Scatter Plot')
         st.altair_chart(scatered, theme= "streamlit", use_container_width=True)
-        st.text("2D Histogram Scatter Plot")
-        st.altair_chart(s2d, theme= "streamlit", use_container_width=True)
+        
 
     
     with col2:
-        st.text('Mosaic Chart')
-        ((origin_labels & mosaic).resolve_scale(x="shared").configure_view(stroke="").configure_concat(spacing=10).configure_axis(domain=False, ticks=False, labels=False, grid=False))
-
+        
+        #st.text('Mosaic Chart')
+        #((origin_labels & mosaic).resolve_scale(x="shared").configure_view(stroke="").configure_concat(spacing=10).configure_axis(domain=False, ticks=False, labels=False, grid=False))
+        st.text("2D Histogram Scatter Plot")
+        st.altair_chart(s2d, theme= "streamlit", use_container_width=True)
 
 with tab6:
 
