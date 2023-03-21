@@ -50,14 +50,17 @@ col2.image(zeta_logo)
 
 #Pie chart 1 - Match rate
 match_rate = pd.read_csv('tableau_data/Match Rate.csv', encoding='utf_16', sep = "\t" )
+
 pie1 = alt.Chart(match_rate).encode(
     theta=alt.Theta("Value:Q", stack=True),
     color=alt.Color("Field metric:N", legend=None),
 )
 pie = pie1.mark_arc(outerRadius=120)
-text = pie1.mark_text(radius=180, size=10).encode(
+text = pie1.mark_text(radius=180, size=15).encode(
     text="Field metric:N"
 )
+#text_2 = pie1.mark_text(radius=50, size=15).encode(
+#    text= alt.Text("Value:Q" , format ='.0%' , color= 'black') )
 
 
 #Bar 1 - Match Breakdown
@@ -620,12 +623,12 @@ rect = base.mark_rect().encode(
 )
 
 
-text = base.mark_text(baseline="middle").encode(
+textc = base.mark_text(baseline="middle").encode(
     x=alt.X("xc:Q", axis=None), y=alt.Y("yc:Q", title="Cylinders"), text="Cylinders:N"
 )
 
 
-mosaic = rect + text
+mosaic = rect + textc
 
 origin_labels = base.mark_text(baseline="middle", align="center").encode(
     x=alt.X(
@@ -636,13 +639,6 @@ origin_labels = base.mark_text(baseline="middle", align="center").encode(
     text="Origin",
 )
 
-(
-    (origin_labels & mosaic)
-    .resolve_scale(x="shared")
-    .configure_view(stroke="")
-    .configure_concat(spacing=10)
-    .configure_axis(domain=False, ticks=False, labels=False, grid=False)
-)
 
 
 font_css = """<style>
@@ -655,18 +651,15 @@ button[data-baseweb="tab"] > div[data-testid="stMarkdownContainer"] > p {
 st.write(font_css, unsafe_allow_html=True)
 
 #Option 2
-tab1, tab2, tab3 = st.tabs(["Overall Coverage Analysis", "Email Match Analysis", "Direct Mail Match Analysis"])
+tab1, tab2, tab3,tab4, tab5, tab6 = st.tabs(["Overall Coverage Analysis", "Email Match Analysis", "Direct Mail Match Analysis", "Example tab 1", "Example tab 2", "Example tab 3"])
 
 with tab1:
    
-    col1, col2, col3 = st.columns(3)
+    col1, col2= st.columns(2)
     with col1:
         #match rate
         st.text('match rate')
-        st.altair_chart((pie+text), theme="streamlit", use_container_width=True)
-
-        
-        
+        st.altair_chart((pie+text), use_container_width=True)
 
     with col2:
         #match breakdown
@@ -678,22 +671,8 @@ with tab1:
         st.altair_chart((bars2 + text2), use_container_width=True)
 
 
-    with col3:
-        #omni-channel reavh
-        #email coverage
-        #programmatic coverage
-        st.text('omni-channel reach')
-        st.altair_chart((bars3 + text3), use_container_width=True)
-        st.text('email coverage')
-        st.altair_chart(alt.layer(bars4, text4, data=email_coverage), theme= "streamlit", use_container_width=True)
-        st.text('programmatic coverage')
-        st.altair_chart(alt.layer(bars5, text5, data=prog_cove), theme= "streamlit", use_container_width=True)
-        
-
-
-
 with tab2:
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2 = st.columns(2)
     with col1:
        st.text('omni-channel reach - Radial graph')
        st.altair_chart((c2 + c3),theme= "streamlit", use_container_width=True) 
@@ -701,21 +680,12 @@ with tab2:
         st.text('Layered Area Chart')
         st.altair_chart(layered, theme= "streamlit", use_container_width=True)
        
-    with col3:
-        st.text('Multifeature Scatter Plot')
-        st.altair_chart(scatered, theme= "streamlit", use_container_width=True)
-        st.text("2D Histogram Scatter Plot")
-        st.altair_chart(s2d, theme= "streamlit", use_container_width=True)
-
     
-    with col4:
-        st.text('Mosaic Chart')
-        ((origin_labels & mosaic).resolve_scale(x="shared").configure_view(stroke="").configure_concat(spacing=10).configure_axis(domain=False, ticks=False, labels=False, grid=False))
 
 
 with tab3:
     
-    col1, col2, col3 = st.columns(3)
+    col1, col2  = st.columns(2)
     with col1:
         #st.selectbox("City", ["City1", "City2"])
         st.text('Trellis Area Chart')
@@ -727,7 +697,41 @@ with tab3:
         st.text('Divergin')
         st.altair_chart(divergin, theme= "streamlit", use_container_width=True)
         
-    with col3:
-        st.text('Hexbin Chart')
-        st.altair_chart(hexbin, theme= "streamlit", use_container_width=True)
+    
         
+
+with tab4:
+    col1, col2 =st.columns(2)
+    with col1:
+        #omni-channel reavh
+        #email coverage
+        #programmatic coverage
+        st.text('omni-channel reach')
+        st.altair_chart((bars3 + text3), use_container_width=True)
+        
+    with col2:
+        st.text('email coverage')
+        st.altair_chart(alt.layer(bars4, text4, data=email_coverage), theme= "streamlit", use_container_width=True)
+        st.text('programmatic coverage')
+        st.altair_chart(alt.layer(bars5, text5, data=prog_cove), theme= "streamlit", use_container_width=True)
+
+
+
+with tab5:
+    col1, col2 = st.columns(2)
+    with col1:
+        st.text('Multifeature Scatter Plot')
+        st.altair_chart(scatered, theme= "streamlit", use_container_width=True)
+        st.text("2D Histogram Scatter Plot")
+        st.altair_chart(s2d, theme= "streamlit", use_container_width=True)
+
+    
+    with col2:
+        st.text('Mosaic Chart')
+        ((origin_labels & mosaic).resolve_scale(x="shared").configure_view(stroke="").configure_concat(spacing=10).configure_axis(domain=False, ticks=False, labels=False, grid=False))
+
+
+with tab6:
+
+    st.text('Hexbin Chart')
+    st.altair_chart(hexbin, theme= "streamlit", use_container_width=True)
