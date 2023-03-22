@@ -49,14 +49,19 @@ col2.image(zeta_logo)
 
 
 #Pie chart 1 - Match rate
-match_rate = pd.read_csv('tableau_data/Match Rate.csv', encoding='utf_16', sep = "\t" )
+
+#match_rate = pd.read_csv('tableau_data/Match Rate.csv', encoding='utf_16', sep = "\t" )
+match_rate = pd.DataFrame({"Field": ['Match Rate', 'Match Rate']
+                                ,"Field metric": ['Matched to Data Cloud', 'Not Matched to Data Cloud']
+                                ,"Percent" :[0.65, 0.35]
+                                ,"Value": [65, 35]})
 
 pie1 = alt.Chart(match_rate).encode(
     theta=alt.Theta("Value:Q", stack=True),
-    color=alt.Color("Field metric:N", legend=None),
+    color=alt.Color("Field metric:N", legend=None, scale=alt.Scale(scheme='set1')),
 )
 pie = pie1.mark_arc(outerRadius=120)
-text = pie1.mark_text(radius=180, size=15).encode(
+text = pie1.mark_text(radius=215, size=20).encode(
     text="Field metric:N"
 )
 #text_2 = pie1.mark_text(radius=50, size=15).encode(
@@ -69,7 +74,7 @@ match_breakdown = pd.DataFrame({"Field": ['Match Breakdown', 'Match Breakdown', 
                                 ,"Field metric": ["Email","Full Name + Full Postal", "Phone"]
                                 ,"Percent" :[0.6, 0.5, 0.4]
                                 ,"Value": [60, 50, 40]})
-bars1 = alt.Chart(match_breakdown).mark_bar(size=30).encode(
+bars1 = alt.Chart(match_breakdown).mark_bar(size=70).encode(
         x= alt.X('Field metric:N',axis=alt.Axis(labelAngle=0)),
         y=alt.Y('Value:Q', axis=alt.Axis(title='Match Count')),
         color= alt.Color("Field metric:N", legend = None, scale=alt.Scale(scheme='accent'))
@@ -81,6 +86,7 @@ text1 = bars1.mark_text(
     align='center',
     baseline='middle',
     dx=0,dy=-10, # Nudges text to right so it doesn't appear on top of the bar
+    size = 20
 ).encode(
     text='Value:Q'
 )
@@ -97,11 +103,10 @@ bars2 = alt.Chart(data_signal_matches).transform_joinaggregate(
     TotalValue='sum(Value)',
 ).transform_calculate(
     PercentOfTotal="datum.Value / datum.TotalValue"
-).mark_bar(size = 30).encode(
+).mark_bar(size = 70).encode(
 alt.X('Field metric:N', axis=alt.Axis(labelAngle=0)),
 alt.Y('PercentOfTotal:Q', axis=alt.Axis(format='.0%', title='Match Count')),
 alt.Color("Field metric:N", legend=None, scale=alt.Scale(scheme='category10'))
-
 ).properties(
 width=alt.Step(150) # controls width of bar.
     #, height=500  # height of the table
@@ -111,6 +116,7 @@ text2 = bars2.mark_text(
     align='center',
     baseline='middle',
     dx=0,dy=-10, # Nudges text to right so it doesn't appear on top of the bar
+    size =20
 ).encode(
     alt.Text('PercentOfTotal:Q',
     format ='.0%')
@@ -129,13 +135,13 @@ bars3 = alt.Chart(omni_channel_reach).transform_joinaggregate(
     TotalValue='sum(Value)',
 ).transform_calculate(
     PercentOfTotal="datum.Value / datum.TotalValue"
-).mark_bar(size=30).encode(
+).mark_bar(size=70).encode(
 alt.X('Field metric:N', axis=alt.Axis(labelAngle=0)),
 alt.Y('PercentOfTotal:Q', axis=alt.Axis(format='.0%', title='Match Count')),
 alt.Color("Field metric:N", legend=None, scale=alt.Scale(scheme='set1'))
 
 ).properties(
-width=alt.Step(200) # controls width of bar.
+width=alt.Step(170) # controls width of bar.
     #, height=500  # height of the table
         
 )
@@ -143,6 +149,7 @@ text3 = bars3.mark_text(
     align='center',
     baseline='middle',
     dx=0,dy=-10, # Nudges text to right so it doesn't appear on top of the bar
+    size =20
 ).encode(
     alt.Text('PercentOfTotal:Q',
     format ='.0%')
@@ -157,7 +164,7 @@ base2 = alt.Chart(omni_channel_reach).encode(
 
 c2 = base2.mark_arc(innerRadius=20, stroke="#fff")
 
-c3 = base2.mark_text(radiusOffset=30).encode(alt.Text ("Percent:Q", format ='.0%'))
+c3 = base2.mark_text(radiusOffset=50, size=25).encode(alt.Text ("Percent:Q", format ='.0%'))
 
 
 
@@ -170,10 +177,18 @@ bars4=alt.Chart().transform_joinaggregate(
     TotalValue='sum(Value)',
 ).transform_calculate(
     PercentOfTotal="datum.Value / datum.TotalValue"
-).mark_bar().encode(
+).mark_bar(size=45).encode(
     x=alt.X('PercentOfTotal:Q',stack='zero', axis=alt.Axis(format='.0%')),
-    y=alt.Y('Universe:N'),
-    color=alt.Color('Type:N',  scale=alt.Scale(scheme='dark2'))
+    y=alt.Y('Universe:N', axis=alt.Axis(title=None)),
+    color=alt.Color('Type:N',  scale=alt.Scale(scheme='dark2')
+    ,legend=alt.Legend(
+        orient='none',
+        legendX=0, legendY=-33,
+        direction='horizontal',
+        titleAnchor='middle'))
+).properties(
+width=1000#alt.Step(1000) 
+,height = 300
 )
 
 text4=alt.Chart().mark_text( dx=-15, dy=3 , color='black').encode(
@@ -192,10 +207,18 @@ bars5=alt.Chart().transform_joinaggregate(
     TotalValue='sum(Value)',
 ).transform_calculate(
     PercentOfTotal="datum.Value / datum.TotalValue"
-).mark_bar().encode(
+).mark_bar(size=45).encode(
     x=alt.X('PercentOfTotal:Q',stack='zero', axis=alt.Axis(format='.0%')),
-    y=alt.Y('Channel:N'),
-    color=alt.Color('Type:N',  scale=alt.Scale(scheme='viridis'))
+    y=alt.Y('Channel:N', axis=alt.Axis(title=None)),
+    color=alt.Color('Type:N',  scale=alt.Scale(scheme='viridis')
+    ,legend=alt.Legend(
+        orient='none',
+        legendX=0, legendY=-33,
+        direction='horizontal',
+        titleAnchor='middle'))
+).properties(
+width=1020#width=alt.Step(1000) 
+,height = 300
 )
 
 text5=alt.Chart().mark_text( dx=-15, dy=3 , color='black').encode(
@@ -208,6 +231,7 @@ text5=alt.Chart().mark_text( dx=-15, dy=3 , color='black').encode(
 ##Fake graphs
 
 #Hexbin Chart
+
 source = data.seattle_weather()
 size = 15
 xFeaturesCount = 12
@@ -215,20 +239,50 @@ yFeaturesCount = 7
 xField = 'date'
 yField = 'date'
 
+# the shape of a hexagon
 hexagon = "M0,-2.3094010768L2,-1.1547005384 2,1.1547005384 0,2.3094010768 -2,1.1547005384 -2,-1.1547005384Z"
 
+#hexbin=alt.Chart(source).mark_point(size=size**2, shape=hexagon).encode(
+#    x=alt.X('xFeaturePos:Q', axis=alt.Axis(title='Month',
+#                                           grid=False, tickOpacity=0, domainOpacity=0)),
+#   y=alt.Y('day(' + yField + '):O', axis=alt.Axis(title='Weekday',
+#                                                   labelPadding=20, tickOpacity=0, domainOpacity=0)),
+#    stroke=alt.value('black'),
+#    strokeWidth=alt.value(0.2),
+#    fill=alt.Color('mean(temp_max):Q', scale=alt.Scale(scheme='darkblue')),
+#    tooltip=['month(' + xField + '):O', 'day(' + yField + '):O', 'mean(temp_max):Q']
+#).transform_calculate(
+#    # This field is required for the hexagonal X-Offset
+#    xFeaturePos='(day(datum.' + yField + ') % 2) / 2 + month(datum.' + xField + ')'
+#).properties(
+#    # Exact scaling factors to make the hexbins fit
+#    width=size * xFeaturesCount * 2,
+#    height=size * yFeaturesCount * 1.7320508076,  # 1.7320508076 is approx. sin(60°)*2
+#).configure_view(
+#    strokeWidth=0
+#).configure_axisY(
+#)
+
+las_click_date =  pd.read_csv('tableau_data/las_click_date.csv')#, encoding='utf_16', sep = "\t" 
+
+las_click_day =  pd.read_csv('tableau_data/las_click_day.csv')#, encoding='utf_16', sep = "\t" 
+
+click_count =  pd.read_csv('tableau_data/click_count.csv')#, encoding='utf_16', sep = "\t" 
+
+source = result = pd.concat([las_click_date, las_click_day,click_count ], axis=1)
+
 hexbin= alt.Chart(source).mark_point(size=size**2, shape=hexagon).encode(
-    x=alt.X('xFeaturePos:Q', axis=alt.Axis(title='Month',
+    x=alt.X('LAST_CLICK_DATE:Q', axis=alt.Axis(title='Month',
                                            grid=False, tickOpacity=0, domainOpacity=0)),
-    y=alt.Y('day(' + yField + '):O', axis=alt.Axis(title='Weekday',
+    y=alt.Y('LAST_CLICK_DAY:O', axis=alt.Axis(title='Weekday',
                                                    labelPadding=20, tickOpacity=0, domainOpacity=0)),
     stroke=alt.value('black'),
     strokeWidth=alt.value(0.2),
-    fill=alt.Color('mean(temp_max):Q', scale=alt.Scale(scheme='darkblue')),
-    tooltip=['month(' + xField + '):O', 'day(' + yField + '):O', 'mean(temp_max):Q']
+    fill=alt.Color('CLICK_COUNT:Q', scale=alt.Scale(scheme='darkblue')),
+    tooltip=['LAST_CLICK_DATE:O', 'LAST_CLICK_DAY:O', 'CLICK_COUNT:Q']
 ).transform_calculate(
     # This field is required for the hexagonal X-Offset
-    xFeaturePos='(day(datum.' + yField + ') % 2) / 2 + month(datum.' + xField + ')'
+    xFeaturePos='( LAST_CLICK_DAY % 2) / 2 + LAST_CLICK_DATE'
 ).properties(
     # Exact scaling factors to make the hexbins fit
     width=size * xFeaturesCount * 2,
@@ -236,6 +290,7 @@ hexbin= alt.Chart(source).mark_point(size=size**2, shape=hexagon).encode(
 ).configure_view(
     strokeWidth=0
 )
+
 
 #Heatmap
 x, y = np.meshgrid(range(-5, 5), range(-5, 5))
@@ -248,7 +303,10 @@ source = pd.DataFrame({'x': x.ravel(),
 heat = alt.Chart(source).mark_rect().encode(
     x='x:O',
     y='y:O',
-    color='z:Q'
+    color=alt.Color('z:Q')
+).properties(
+    height=400 
+    , width = 800
 )
 
 
@@ -522,9 +580,12 @@ divergin= alt.Chart(source).mark_bar().encode(
     y=alt.Y('question:N', axis=y_axis),
     color=alt.Color(
         'type:N',
-        legend=alt.Legend( title='Response'),
-        scale=color_scale,
-    )
+        legend=alt.Legend( title='Response')
+    ,scale=color_scale)
+
+).properties(
+    height=400 
+    , width =1000
 )
  
 #Trellis 
@@ -546,7 +607,14 @@ source = data.iowa_electricity()
 layered=alt.Chart(source).mark_area(opacity=0.3).encode(
     x="year:T",
     y=alt.Y("net_generation:Q", stack=None),
-    color="source:N"
+    color=alt.Color("source:N", legend=alt.Legend(
+        orient='none',
+        legendX=0, legendY=-33,
+        direction='horizontal',
+        titleAnchor='middle'))
+).properties(
+    height=400 
+    ,width= 1000
 )
 
 #Scatterd 
@@ -555,8 +623,11 @@ source = data.iris()
 scatered=alt.Chart(source).mark_circle().encode(
     alt.X('sepalLength', scale=alt.Scale(zero=False)),
     alt.Y('sepalWidth', scale=alt.Scale(zero=False, padding=1)),
-    color='species',
-    size='petalWidth'
+    color=alt.Color('species')
+    ,size='petalWidth'
+).properties(
+    height=400 
+    ,width=900
 )
 
 #2D scattered
@@ -565,7 +636,10 @@ source = data.movies.url
 s2d =alt.Chart(source).mark_circle().encode(
     alt.X('IMDB_Rating:Q', bin=True),
     alt.Y('Rotten_Tomatoes_Rating:Q', bin=True),
-    size='count()'
+    size=alt.Size('count()')
+).properties(
+    height=400 
+    ,width=900
 )
 
 
@@ -674,68 +748,69 @@ with tab1:
 
 
 with tab2:
-    col1, col2 = st.columns(2)
-    with col1:
+    cols= st.columns([1,1,1,1,1,1,1,1,1,1,1])
+    with cols[2]:
        st.text('omni-channel reach - Radial graph')
-       st.altair_chart((c2 + c3),theme= "streamlit", use_container_width=True) 
-    with col2:
+       st.altair_chart((c2 + c3))#,theme= "streamlit", use_container_width=True) 
+    with cols[5]:
         st.text('Layered Area Chart')
-        st.altair_chart(layered, theme= "streamlit", use_container_width=True)
+        st.altair_chart(layered)
        
     
 
 
 with tab3:
     
-    col1, col2  = st.columns(2)
-    with col1:
+    cols= st.columns([1,1,1,1,1,1,1,1,1,1,1])
+    with cols[0]:
         #st.selectbox("City", ["City1", "City2"])
         #st.text('Trellis Area Chart')
         #st.altair_chart(trellis, theme= "streamlit", use_container_width=True)
         st.text('Divergin')
-        st.altair_chart(divergin, theme= "streamlit", use_container_width=True)
-    with col2:
+        st.altair_chart(divergin, theme= "streamlit")
+    with cols[6]:
         #st.selectbox("District", ["District1", "District2"])
         st.text('Heat Map')
-        st.altair_chart(heat, theme= "streamlit", use_container_width=True)
+        st.altair_chart(heat, theme= "streamlit")
         
         
     
         
 
 with tab4:
-    col1, col2 =st.columns(2)
-    with col1:
+    cols= st.columns([1,1,1,1,1,1,1,1,1,1,1])
+    with cols[0]:
         #omni-channel reavh
         #email coverage
         #programmatic coverage
         st.text('omni-channel reach')
-        st.altair_chart((bars3 + text3), use_container_width=True)
+        st.altair_chart((bars3 + text3))#, use_container_width=True)
         
-    with col2:
+    with cols[5]:
         st.text('email coverage')
-        st.altair_chart(alt.layer(bars4, text4, data=email_coverage), theme= "streamlit", use_container_width=True)
+        st.altair_chart(alt.layer(bars4, text4, data=email_coverage))#, theme= "streamlit", use_container_width=True)
         st.text('programmatic coverage')
-        st.altair_chart(alt.layer(bars5, text5, data=prog_cove), theme= "streamlit", use_container_width=True)
+        st.altair_chart(alt.layer(bars5, text5, data=prog_cove))#, theme= "streamlit", use_container_width=True)
 
 
 
 with tab5:
-    col1, col2 = st.columns(2)
-    with col1:
+    cols = st.columns([1,1,1,1,1,1,1,1,1,1,1])
+    with cols[0]:
         st.text('Multifeature Scatter Plot')
-        st.altair_chart(scatered, theme= "streamlit", use_container_width=True)
+        st.altair_chart(scatered)#, theme= "streamlit", use_container_width=True)
         
 
     
-    with col2:
+    with cols[6]:
         
         #st.text('Mosaic Chart')
         #((origin_labels & mosaic).resolve_scale(x="shared").configure_view(stroke="").configure_concat(spacing=10).configure_axis(domain=False, ticks=False, labels=False, grid=False))
         st.text("2D Histogram Scatter Plot")
-        st.altair_chart(s2d, theme= "streamlit", use_container_width=True)
+        st.altair_chart(s2d)#, theme= "streamlit", use_container_width=True)
 
 with tab6:
-
-    st.text('Hexbin Chart')
-    st.altair_chart(hexbin, theme= "streamlit", use_container_width=True)
+    cols = st.columns([1,1,1,1,1,1,1,1,1,1,1])
+    with cols[2]:
+        st.text('Hexbin Chart')
+        st.altair_chart(hexbin)#, theme= "streamlit", use_container_width=True)
