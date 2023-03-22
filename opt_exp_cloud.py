@@ -8,6 +8,7 @@ from snowflake.connector.pandas_tools import write_pandas
 import altair as alt
 from PIL import Image
 from vega_datasets import data
+import calendar as cal
 
 
 st.set_page_config(layout="wide", page_title='ZMP-Opportunity Explorer Streamlit app')
@@ -232,8 +233,8 @@ text5=alt.Chart().mark_text( dx=-15, dy=3 , color='black').encode(
 
 #Hexbin Chart
 
-source = data.seattle_weather()
-size = 15
+
+size =45
 xFeaturesCount = 12
 yFeaturesCount = 7
 xField = 'date'
@@ -242,27 +243,6 @@ yField = 'date'
 # the shape of a hexagon
 hexagon = "M0,-2.3094010768L2,-1.1547005384 2,1.1547005384 0,2.3094010768 -2,1.1547005384 -2,-1.1547005384Z"
 
-#hexbin=alt.Chart(source).mark_point(size=size**2, shape=hexagon).encode(
-#    x=alt.X('xFeaturePos:Q', axis=alt.Axis(title='Month',
-#                                           grid=False, tickOpacity=0, domainOpacity=0)),
-#   y=alt.Y('day(' + yField + '):O', axis=alt.Axis(title='Weekday',
-#                                                   labelPadding=20, tickOpacity=0, domainOpacity=0)),
-#    stroke=alt.value('black'),
-#    strokeWidth=alt.value(0.2),
-#    fill=alt.Color('mean(temp_max):Q', scale=alt.Scale(scheme='darkblue')),
-#    tooltip=['month(' + xField + '):O', 'day(' + yField + '):O', 'mean(temp_max):Q']
-#).transform_calculate(
-#    # This field is required for the hexagonal X-Offset
-#    xFeaturePos='(day(datum.' + yField + ') % 2) / 2 + month(datum.' + xField + ')'
-#).properties(
-#    # Exact scaling factors to make the hexbins fit
-#    width=size * xFeaturesCount * 2,
-#    height=size * yFeaturesCount * 1.7320508076,  # 1.7320508076 is approx. sin(60°)*2
-#).configure_view(
-#    strokeWidth=0
-#).configure_axisY(
-#)
-
 las_click_date =  pd.read_csv('tableau_data/las_click_date.csv')#, encoding='utf_16', sep = "\t" 
 
 las_click_day =  pd.read_csv('tableau_data/las_click_day.csv')#, encoding='utf_16', sep = "\t" 
@@ -270,19 +250,20 @@ las_click_day =  pd.read_csv('tableau_data/las_click_day.csv')#, encoding='utf_1
 click_count =  pd.read_csv('tableau_data/click_count.csv')#, encoding='utf_16', sep = "\t" 
 
 source = result = pd.concat([las_click_date, las_click_day,click_count ], axis=1)
+source = source[['LAST_CLICK_DATE', 'LAST_CLICK_DAY', 'CLICK_COUNT']]
+source["month_name"] = source["LAST_CLICK_DATE"].apply(lambda x: cal.month_name[x] )
 
-hexbin= alt.Chart(source).mark_point(size=size**2, shape=hexagon).encode(
-    x=alt.X('LAST_CLICK_DATE:Q', axis=alt.Axis(title='Month',
-                                           grid=False, tickOpacity=0, domainOpacity=0)),
-    y=alt.Y('LAST_CLICK_DAY:O', axis=alt.Axis(title='Weekday',
-                                                   labelPadding=20, tickOpacity=0, domainOpacity=0)),
+hexbin= alt.Chart(source).mark_point(size=size*(size/2), shape=hexagon).encode(
+    x=alt.X('xFeaturePos:Q', axis=alt.Axis(title='Month', grid=False, tickOpacity=0, domainOpacity=0 )),
+    y=alt.Y('LAST_CLICK_DAY:O', axis=alt.Axis(title='Day of the week', labelPadding=20, tickOpacity=0, domainOpacity=0)),
     stroke=alt.value('black'),
     strokeWidth=alt.value(0.2),
-    fill=alt.Color('CLICK_COUNT:Q', scale=alt.Scale(scheme='darkblue')),
-    tooltip=['LAST_CLICK_DATE:O', 'LAST_CLICK_DAY:O', 'CLICK_COUNT:Q']
+    fill=alt.Color('mean(CLICK_COUNT):Q', scale=alt.Scale(scheme='darkblue')),
+    tooltip=['month_name:O', 'LAST_CLICK_DAY:O', 'mean(CLICK_COUNT):Q']
 ).transform_calculate(
     # This field is required for the hexagonal X-Offset
-    xFeaturePos='( LAST_CLICK_DAY % 2) / 2 + LAST_CLICK_DATE'
+    xFeaturePos='( datum.LAST_CLICK_DAY % 2) / 2 + datum.LAST_CLICK_DATE'
+    
 ).properties(
     # Exact scaling factors to make the hexbins fit
     width=size * xFeaturesCount * 2,
@@ -290,6 +271,7 @@ hexbin= alt.Chart(source).mark_point(size=size**2, shape=hexagon).encode(
 ).configure_view(
     strokeWidth=0
 )
+
 
 
 #Heatmap
@@ -810,7 +792,7 @@ with tab5:
         st.altair_chart(s2d)#, theme= "streamlit", use_container_width=True)
 
 with tab6:
-    cols = st.columns([1,1,1,1,1,1,1,1,1,1,1])
-    with cols[2]:
+    cols= st.columns([1,1])
+    with cols[0]:
         st.text('Hexbin Chart')
-        st.altair_chart(hexbin)#, theme= "streamlit", use_container_width=True)
+        st.altair_chart(hexbin)# , use_container_width=True)#, theme= "streamlit", use_container_width=True)
