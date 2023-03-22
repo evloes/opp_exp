@@ -252,9 +252,11 @@ click_count =  pd.read_csv('tableau_data/click_count.csv')#, encoding='utf_16', 
 source = result = pd.concat([las_click_date, las_click_day,click_count ], axis=1)
 source = source[['LAST_CLICK_DATE', 'LAST_CLICK_DAY', 'CLICK_COUNT']]
 source["month_name"] = source["LAST_CLICK_DATE"].apply(lambda x: cal.month_name[x] )
+axis_labels = ( " datum.LAST_CLICK_DATE == 1.0 ? 'Jan' : datum.LAST_CLICK_DATE == 2.0 ? 'Feb'     : datum.LAST_CLICK_DATE == 3.0 ? 'Mar'    : datum.LAST_CLICK_DATE == 4.0 ? 'Apr'    : datum.LAST_CLICK_DATE == 5.0 ? 'May'     : datum.LAST_CLICK_DATE == 6.0 ? 'Jun'     : datum.LAST_CLICK_DATE == 7.0 ? 'Jul' : datum.LAST_CLICK_DATE == 8.0 ? 'Aug'     : datum.LAST_CLICK_DATE == 9.0 ? 'Sep'     : datum.LAST_CLICK_DATE == 10.0 ? 'Oct'     : datum.LAST_CLICK_DATE == 11.0 ? 'Nov' :  'Dec' ")
+
 
 hexbin= alt.Chart(source).mark_point(size=size*(size/2), shape=hexagon).encode(
-    x=alt.X('xFeaturePos:Q', axis=alt.Axis(title='Month', grid=False, tickOpacity=0, domainOpacity=0 )),
+    x=alt.X('xFeaturePos:Q', axis=alt.Axis(title='Month', grid=False, tickOpacity=0, domainOpacity=0, labelExpr = axis_labels )),
     y=alt.Y('LAST_CLICK_DAY:O', axis=alt.Axis(title='Day of the week', labelPadding=20, tickOpacity=0, domainOpacity=0)),
     stroke=alt.value('black'),
     strokeWidth=alt.value(0.2),
