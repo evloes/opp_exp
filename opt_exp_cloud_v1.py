@@ -143,8 +143,9 @@ text3 = alt.Chart(source1).mark_text(dx=-15, dy=3, color='white').encode(
 
 graph3 = (bars3 + text3).properties(
 width=800 # controls width of bar.
-, height=350  # height of the table
+,height=375  # height of the table
 )
+
 
 
 # 4. Bar Chart with Rounded Edges
