@@ -143,17 +143,36 @@ text3 = alt.Chart(source1).mark_text(dx=-15, dy=3, color='white').encode(
 
 graph3 = (bars3 + text3).properties(
 width=800 # controls width of bar.
-    #, height=500  # height of the table
+, height=350  # height of the table
 )
+
 
 # 4. Bar Chart with Rounded Edges
 source = data.seattle_weather()
+source['date'] = source['date'].dt.month
+source.loc[source["date"] == 1, "date"] = "Automotive"
+source.loc[source["date"] == 2, "date"] = "Business"
+source.loc[source["date"] == 3, "date"] = "Education"
+source.loc[source["date"] == 4, "date"] = "Entertainment"
+source.loc[source["date"] == 5, "date"] = "Health"
+source.loc[source["date"] == 6, "date"] = "Home"
+source.loc[source["date"] == 7, "date"] = "Humanities"
+source.loc[source["date"] == 8, "date"] = "Life Events"
+source.loc[source["date"] == 9, "date"] = "Recreation"
+source.loc[source["date"] == 10, "date"] = "Science"
+source.loc[source["date"] == 11, "date"] = "Society"
+source.loc[source["date"] == 12, "date"] = "Technology"
+source = source[(source.weather.isin(['drizzle','fog', 'rain', 'sun']))]
+source.loc[source["weather"] == "drizzle", "weather"] = "Q1"
+source.loc[source["weather"] == "fog" , "weather"] = "Q2"
+source.loc[source["weather"] ==  "rain" , "weather"] = "Q3"
+source.loc[source["weather"] ==  "sun", "weather"] = "Q4"
 
 bars4 = alt.Chart(source).mark_bar(
     cornerRadiusTopLeft=3,
     cornerRadiusTopRight=3
 ).encode(
-    x='month(date):O',
+    x='date:N',
     y='count():Q',
     color=alt.Color('weather:N',  scale=alt.Scale(scheme='accent'))
 ).properties(
@@ -273,14 +292,17 @@ source = result = pd.concat([las_click_date, las_click_day,click_count ], axis=1
 source = source[['LAST_CLICK_DATE', 'LAST_CLICK_DAY', 'CLICK_COUNT']]
 source["month_name"] = source["LAST_CLICK_DATE"].apply(lambda x: cal.month_name[x] )
 
+##, labelExpr = ( " datum.LAST_CLICK_DATE == 1 ? 'Jan' : datum.LAST_CLICK_DATE == 2 ? 'Feb'     : datum.LAST_CLICK_DATE == 3 ? 'Mar'    : datum.LAST_CLICK_DATE == 4 ? 'Apr'    : datum.LAST_CLICK_DATE == 5 ? 'May'     : datum.LAST_CLICK_DATE == 6 ? 'Jun'     : datum.LAST_CLICK_DATE == 7 ? 'Jul' : datum.LAST_CLICK_DATE == 8 ? 'Aug'     : datum.LAST_CLICK_DATE == 9 ? 'Sep'     : datum.LAST_CLICK_DATE == 10 ? 'Oct'     : datum.LAST_CLICK_DATE == 11 ? 'Nov' :  'Dec' ")
+
 hexbin= alt.Chart(source).mark_point(size=size*(size/2), shape=hexagon).encode(
-    x=alt.X('xFeaturePos:Q', axis=alt.Axis(title='Month', grid=False, tickOpacity=0, domainOpacity=0 
-                                           #, labelExpr = ( " datum.LAST_CLICK_DATE == 1 ? 'Jan' : datum.LAST_CLICK_DATE == 2 ? 'Feb'     : datum.LAST_CLICK_DATE == 3 ? 'Mar'    : datum.LAST_CLICK_DATE == 4 ? 'Apr'    : datum.LAST_CLICK_DATE == 5 ? 'May'     : datum.LAST_CLICK_DATE == 6 ? 'Jun'     : datum.LAST_CLICK_DATE == 7 ? 'Jul' : datum.LAST_CLICK_DATE == 8 ? 'Aug'     : datum.LAST_CLICK_DATE == 9 ? 'Sep'     : datum.LAST_CLICK_DATE == 10 ? 'Oct'     : datum.LAST_CLICK_DATE == 11 ? 'Nov' :  'Dec' ")
-                                           , values=('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))),
+    x=alt.X('xFeaturePos:N', axis=alt.Axis(title='Month', grid=False, tickOpacity=10, domainOpacity=10 
+                                           
+                                           , values=(1, 2,3,4,5,6,7,8,9,10,11,12)
+                                           ,labelAngle= 0)),
     y=alt.Y('LAST_CLICK_DAY:O', axis=alt.Axis(title='Day of the week', labelPadding=20, tickOpacity=0, domainOpacity=0)),
     stroke=alt.value('black'),
     strokeWidth=alt.value(0.2),
-    fill=alt.Color('mean(CLICK_COUNT):Q', scale=alt.Scale(scheme='darkblue')),
+    fill=alt.Color('mean(CLICK_COUNT):Q', scale=alt.Scale(scheme='accent')),
     tooltip=['month_name:O', 'LAST_CLICK_DAY:O', 'mean(CLICK_COUNT):Q']
 ).transform_calculate(
     # This field is required for the hexagonal X-Offset
@@ -300,18 +322,14 @@ graph9 = hexbin
 #Stacked BARS -> category of Consumptions
 
 # 10. Layered Area chart - Transactional categories from tableua  change the colomns "series" from eg data to the categories from transactional 
-source = data.iowa_electricity()
+layer_df =pd.read_csv('tableau_data/Layered_graph.csv')
 
-layered10 =alt.Chart(source).mark_area(opacity=0.3).encode(
-    x="year:T",
-    y=alt.Y("net_generation:Q", stack=None),
-    color=alt.Color("source:N", legend=alt.Legend(  #alt.Legend(values=['Total']) 14 categories
-        orient='none',
-        legendX=0, legendY=-33,
-        direction='horizontal',
-        titleAnchor='middle'))
+layered10 =alt.Chart(layer_df).mark_area().encode(
+    x="MONTH:O",
+    y=alt.Y("sum(count):Q"),
+    color=alt.Color("action:N", scale=alt.Scale(scheme='accent'), sort=['OPENS','CLICKS'])
 ).properties(
-    height=400 
+    height=500 
     ,width= 1000
 )
 
