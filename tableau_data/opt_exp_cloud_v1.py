@@ -184,30 +184,18 @@ width=800 # controls width of bar.
 graph4 = bars4
 
 # 5. Streamgraph with Interactive Legend
-abd = pd.read_csv('data_Interactive Charts.csv')
-abd = abd[~abd.series.isin(["Agriculture","Information","Mining and Extraction"])]
-abd.loc[abd["series"] == "Government", "series"] = "Apparel & Accesories" #
-abd.loc[abd["series"] == "Construction", "series"] = "Automotive" #
-abd.loc[abd["series"] == "Manufacturing", "series"] = "Consumer Services" #
-abd.loc[abd["series"] == "Wholesale and Retail Trade", "series"] = "Entertainment"#
-abd.loc[abd["series"] == "Transportation and Utilities", "series"] = "Food & Pharmacy" #
-abd.loc[abd["series"] == "Finance", "series"] = "Home" #
-abd.loc[abd["series"] == "Business services", "series"] = "Mass Retailers" #
-abd.loc[abd["series"] == "Education and Health", "series"] = "Office, Electronics, Games" #
-abd.loc[abd["series"] == "Leisure and hospitality", "series"] = "Restaurant" #
-abd.loc[abd["series"] == "Other", "series"] = "Specialty Retail" #
-abd.loc[abd["series"] == "Self-employed", "series"] = "Travel" #
+source = data.unemployment_across_industries.url
 
 #selection = alt.selection_point(fields=['series'], bind='legend')
 
-stream5 = alt.Chart(abd).mark_area().encode(
+stream5 = alt.Chart(source).mark_area().encode(
     alt.X('yearmonth(date):T', axis=alt.Axis(domain=False, format='%Y', tickSize=0)),
     alt.Y('sum(count):Q', stack='center', axis=None),
     alt.Color('series:N', scale=alt.Scale(scheme='accent')),
     #opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
 ).properties(
 width=800 # controls width of bar.
-, height=500  # height of the table
+    #, height=500  # height of the table
 )
 #.add_params(
 #    selection
@@ -397,4 +385,3 @@ with col2:
     graph6
     graph8
     graph10
-
