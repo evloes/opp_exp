@@ -178,7 +178,7 @@ bars4 = alt.Chart(source).mark_bar(
     color=alt.Color('weather:N',  scale=alt.Scale(scheme='accent'))
 ).properties(
 width=800 # controls width of bar.
-    #, height=500  # height of the table
+, height=375  # height of the table
 )
 
 graph4 = bars4
@@ -200,7 +200,7 @@ abd.loc[abd["series"] == "Self-employed", "series"] = "Travel" #
 
 #selection = alt.selection_point(fields=['series'], bind='legend')
 
-stream5 = alt.Chart(abd).mark_area().encode(
+stream5= alt.Chart(abd).mark_area().encode(
     alt.X('yearmonth(date):T', axis=alt.Axis(domain=False, format='%Y', tickSize=0)),
     alt.Y('sum(count):Q', stack='center', axis=None),
     alt.Color('series:N', scale=alt.Scale(scheme='accent')),
@@ -208,7 +208,7 @@ stream5 = alt.Chart(abd).mark_area().encode(
 ).properties(
 width=800 # controls width of bar.
 , height=500  # height of the table
-)
+).interactive()
 #.add_params(
 #    selection
 #)
@@ -386,7 +386,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.altair_chart(graph1, use_container_width=True)  
     graph3
-    graph5
+    st.altair_chart(graph5, use_container_width=True)
     st.altair_chart(graph7, use_container_width=True)
     graph9
 
