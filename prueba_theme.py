@@ -87,7 +87,7 @@ text = pie1.mark_text(radius=140, size=20,).encode(
 
 graph1= (pie+text)
 
-
+st.text(" ")
 
 
 # 2. Simple Bar chart
