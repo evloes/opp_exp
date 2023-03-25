@@ -363,6 +363,16 @@ with col1:
 
 with col2:
     st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
 
 with col3:
     st.header("  ")
