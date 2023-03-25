@@ -81,13 +81,16 @@ pie1 = alt.Chart(match_rate, title="Nb Matches to Data Cloud"
 )
 pie = pie1.mark_arc(outerRadius=110)
 text = pie1.mark_text(radius=140, size=20,).encode(
+    #theta= 
     text=alt.Text("Percent:Q", format='.0%' )
-    ,color = alt.value("#0905AF")
+    ,color = alt.value("#0905AF")# sort=['OPENS','CLICKS']
 ) 
 
 graph1= (pie+text)
+#graph1= pie
 
 st.text(" ")
+
 
 
 # 2. Simple Bar chart
@@ -112,7 +115,7 @@ width=800 # controls width of bar.
 text2 = bars2.mark_text(
     align='center',
     baseline='middle',
-    dx=0,dy=-10, # Nudges text to right so it doesn't appear on top of the bar
+    dx=0,dy=-15, # Nudges text to right so it doesn't appear on top of the bar
     size =20
 ).encode(
     text= alt.Text('PercentOfTotal:Q', format ='.0%')
@@ -142,7 +145,7 @@ bars3 = alt.Chart(source1, title= "Gender Customers").mark_bar().encode(
 )
 text3 = alt.Chart(source1).mark_text(dx=-15, dy=1, color='black', size=18).encode(
     x=alt.X('sum(yield):Q', stack='zero',  title=None),
-    y=alt.Y('variety:N'),
+    y=alt.Y('variety:N' , axis=alt.Axis(labelLimit = 250)),
     detail='site:N',
     text=alt.Text('sum(yield):Q', format='.0f')
     ,color = alt.value("#0905AF")
@@ -179,11 +182,11 @@ bars4 = alt.Chart(source).mark_bar(
     cornerRadiusTopLeft=3,
     cornerRadiusTopRight=3
 ).encode(
-    x=alt.X('date:N', axis=alt.Axis(labelAngle=-45), title=None),
+    x=alt.X('date:N', axis=alt.Axis(labelAngle=-48), title=None),
     y= alt.Y('count():Q', axis=None),
     color=alt.Color('weather:N', )
 ).properties(
-width=800 # controls width of bar.
+width=900 # controls width of bar.
 , height=375  # height of the table
 )
 
@@ -246,7 +249,7 @@ base = alt.Chart(source, title="Radial chart").encode(
 
 c1 = base.mark_arc(innerRadius=20, stroke="#fff")
 
-c2 = base.mark_text(radiusOffset=20,  size=20).encode(text="values:Q",  color = alt.value("#0905AF"))
+c2 = base.mark_text(radiusOffset=20, size=20, dx=8, dy=-5).encode(text="values:Q",  color = alt.value("#0905AF"))
 
 graph7= (c1 + c2)
 
@@ -267,7 +270,7 @@ width=800 # controls width of bar.
 text8 = bars8.mark_text(
     align='center',
     baseline='middle',
-    dx=0,dy=-10, # Nudges text to right so it doesn't appear on top of the bar
+    dx=0,dy=-15, # Nudges text to right so it doesn't appear on top of the bar
     size = 20
 ).encode(
     text=alt.Text('Percent:Q', format='.0%')
@@ -303,9 +306,10 @@ hexbin= alt.Chart(source, title="Hexbin chart").mark_point(size=size*(size/2), s
                                            , values=(1, 2,3,4,5,6,7,8,9,10,11,12)
                                            ,labelAngle= 0)),
     y=alt.Y('LAST_CLICK_DAY:O', axis=alt.Axis(title='Day of the week', labelPadding=20, tickOpacity=0, domainOpacity=0)),
-    stroke=alt.value('black'),
+    #stroke=alt.value('black'),
     strokeWidth=alt.value(0.2),
-    fill=alt.Color('mean(CLICK_COUNT):Q', ),
+
+    fill=alt.Color('mean(CLICK_COUNT):Q',  scale=alt.Scale( )), #scale = 
     tooltip=['LAST_CLICK_DATE:O', 'LAST_CLICK_DAY:O', 'mean(CLICK_COUNT):Q']
 ).transform_calculate(
     # This field is required for the hexagonal X-Offset
@@ -328,7 +332,7 @@ graph9 = hexbin
 layer_df =pd.read_csv('tableau_data/Layered_graph.csv')
 
 layered10 =alt.Chart(layer_df).mark_area().encode(
-    x=alt.X("MONTH:O", axis = alt.Axis(labelAngle =0)),
+    x=alt.X("MONTH:O", axis = alt.Axis(labelAngle =0, title='Month'  )),
     y=alt.Y("sum(count):Q", axis=None, ),
     color=alt.Color("action:N",  sort=['OPENS','CLICKS'])
 ).properties(
