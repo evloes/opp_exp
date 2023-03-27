@@ -10,7 +10,8 @@ from PIL import Image
 from vega_datasets import data
 import calendar as cal
 #import zeta_theme
-import urban_theme
+import urban_theme # where the color theme is 
+
 
 st.set_page_config(layout="wide", page_title='ZMP-Opportunity Explorer Streamlit app')
 base="light"
@@ -220,12 +221,7 @@ width=800 # controls width of bar.
 
 graph6 =hist6 
 
-scat= pd.read_csv('scatter.csv')
 
-castt= alt.Chart(scat).mark_point().encode(
-    alt.X('IMDB_Rating:Q', bin=True, title='Income' ),
-    alt.Y('Rotten_Tomatoes_Rating:Q', bin=True, title='Age intervals')
-)
 
 # 7. Radial chart
 source = pd.DataFrame({"values": [12, 23, 47, 6, 52, 19]})
@@ -336,7 +332,26 @@ layered10 =alt.Chart(layer_df, title="Click and open distribution").mark_area().
 graph10 = layered10
 
 # 11. Predictions graph 
+forecast = pd.read_csv('competitors.csv')
+forecast = forecast.reset_index().melt('date', var_name='Company', value_name='Conversions')
+forecast = forecast[~forecast.Company.isin(['index'])]
 
+line_a=alt.Chart(forecast).mark_line().encode(
+    x='yearmonth(date):T',
+    y='mean(Conversions):Q',
+    color='Company:N'
+).transform_filter(
+    alt.FieldOneOfPredicate(field='Company', oneOf=['Motel6', 'Motel6_pred'])
+)
+
+
+line_b = alt.Chart(forecast).mark_line().encode(
+    x='yearmonth(date):T',
+    y='mean(Conversions):Q',
+    color='Company:N'
+#).transform_filter(
+#    alt.FieldOneOfPredicate(field='Company', oneOf=['Motel6', 'Motel6_pred'])
+)
 
 #######################
 
@@ -358,6 +373,13 @@ with col1:
     graph9
     #source_h
     st.header("  ")
+    options = st.multiselect('Select your competitor',('Company', 'Competitor B'))
+
+    if 'Competitor B' in options:
+        line_b
+    
+    else:
+        line_a
 
 with col2:
     st.header("  ")
@@ -380,21 +402,10 @@ with col3:
     st.header("  ")
     graph6
     st.header("  ")
-    options = st.multiselect('Select your competitor',('Competitor A', 'Competitor B'))
-
-    if 'Competitor A' in options:
-        bars8 + text8
-
-    elif 'Competitor B' in options:
-        text8
-    
-    else:
-        bars8
-        
-
-    #graph8  -> graph8 = (bars8 +text8)S
+    graph8  
     st.header("  ")
     st.altair_chart(graph10, use_container_width=True)
     st.header("  ")
 
 
+ 
