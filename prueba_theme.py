@@ -210,8 +210,8 @@ graph5 = stream5
 source = data.movies.url
 
 hist6 =alt.Chart(source, title='Zeta-scores across Age and income Bands').mark_circle(color="#0905AF").encode(
-    alt.X('IMDB_Rating:Q', bin=True, title='Income' ),
-    alt.Y('Rotten_Tomatoes_Rating:Q', bin=True, title='Age intervals'),
+    alt.X('income in 1K:Q', bin=True, title='Income' ),
+    alt.Y('ages:Q', bin=True, title='Age intervals'),
     size='count()'
 ).properties(
 width=800 # controls width of bar.
@@ -219,6 +219,13 @@ width=800 # controls width of bar.
 )
 
 graph6 =hist6 
+
+scat= pd.read_csv('scatter.csv')
+
+castt= alt.Chart(scat).mark_point().encode(
+    alt.X('IMDB_Rating:Q', bin=True, title='Income' ),
+    alt.Y('Rotten_Tomatoes_Rating:Q', bin=True, title='Age intervals')
+)
 
 # 7. Radial chart
 source = pd.DataFrame({"values": [12, 23, 47, 6, 52, 19]})
