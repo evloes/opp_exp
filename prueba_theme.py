@@ -211,8 +211,8 @@ graph5 = stream5
 source = data.movies.url
 
 hist6 =alt.Chart(source, title='Zeta-scores across Age and income Bands').mark_circle(color="#0905AF").encode(
-    alt.X('income in 1K:Q', bin=True, title='Income' ),
-    alt.Y('ages:Q', bin=True, title='Age intervals'),
+    alt.X('IMDB_Rating:Q', bin=True, axis=alt.Axis(title='Income bins')),
+    alt.Y('Rotten_Tomatoes_Rating:Q', bin=True, axis=alt.Axis(title="Age bins")),
     size='count()'
 ).properties(
 width=800 # controls width of bar.
