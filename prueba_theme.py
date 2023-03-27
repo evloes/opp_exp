@@ -50,31 +50,13 @@ zeta_logo = Image.open('ZETA_BIG-99e027c92.png') #blue logo
 col2.image(zeta_logo)
 
 
-#Radial Graph  -> omnichannel reach
-
-#omni_channel_reach = pd.read_csv('tableau_data/Omni-Channel Reach.csv', encoding='utf_16', sep = "\t" )
-#omni_channel_reach = omni_channel_reach.transpose()
-#omni_channel_reach.reset_index()
-#new_header = omni_channel_reach.iloc[0] #grab the first row for the header
-#omni_channel_reach = omni_channel_reach[1:] #take the data less the header row
-#omni_channel_reach.columns = new_header #set the header row as the df header#
-#base = alt.Chart(omni_channel_reach).encode(
-#    theta=alt.Theta("values:Q", stack=True),
-#   radius=alt.Radius("values", scale=alt.Scale(type="sqrt", zero=True, rangeMin=20)),
-#    color="index:N",
-#)
-#c1 = base.mark_arc(innerRadius=20, stroke="#fff")
-#c2 = base.mark_text(radiusOffset=10).encode(text="values:Q")
-#c1 + c2
-
-
 # 1. Pie chart
 match_rate = pd.DataFrame({"Field": ['Match Rate', 'Match Rate']
                                 ,"Field metric": ['Matched to Data Cloud', 'Not Matched to Data Cloud']
                                 ,"Percent" :[0.65, 0.35]
                                 ,"Value": [65, 35]})
 
-pie1 = alt.Chart(match_rate, title="Nb Matches to Data Cloud" 
+pie1 = alt.Chart(match_rate, title="Matched Rate" 
    ).encode(
     theta=alt.Theta("Value:Q", stack=True),
     color=alt.Color("Field metric:N"),
@@ -138,7 +120,7 @@ source1.loc[source1["variety"] == "Velvet", "variety"] = "Customer non-site visi
 source1.loc[source1["variety"] == "Glabron", "variety"] = "Zeta per. site visitors"
 source1.loc[source1["variety"] == "Peatland", "variety"] = "Zeta non-per. site visitors"
 
-bars3 = alt.Chart(source1, title= "Gender Customers").mark_bar().encode(
+bars3 = alt.Chart(source1, title= "Gender Index").mark_bar().encode(
     x=alt.X('sum(yield):Q', stack='zero', axis=None),
     y=alt.Y('variety:N', title=None),
     color=alt.Color('site')
@@ -178,13 +160,13 @@ source.loc[source["weather"] == "fog" , "weather"] = "Q2"
 source.loc[source["weather"] ==  "rain" , "weather"] = "Q3"
 source.loc[source["weather"] ==  "sun", "weather"] = "Q4"
 
-bars4 = alt.Chart(source).mark_bar(
+bars4 = alt.Chart(source ,title= "Quarterly Categorical").mark_bar(
     cornerRadiusTopLeft=3,
     cornerRadiusTopRight=3
 ).encode(
     x=alt.X('date:N', axis=alt.Axis(labelAngle=-48), title=None),
     y= alt.Y('count():Q', axis=None),
-    color=alt.Color('weather:N', )
+    color=alt.Color('weather:N',legend=alt.Legend(title="Quarter") )
 ).properties(
 width=900 # controls width of bar.
 , height=375  # height of the table
@@ -209,7 +191,7 @@ abd.loc[abd["series"] == "Self-employed", "series"] = "Travel" #
 
 #selection = alt.selection_point(fields=['series'], bind='legend')
 
-stream5= alt.Chart(abd).mark_area().encode(
+stream5= alt.Chart(abd, title='Transactional Category').mark_area().encode(
     alt.X('yearmonth(date):T', axis=alt.Axis(domain=False, format='%Y', tickSize=0) , title=None),
     alt.Y('sum(count):Q', stack='center', axis=None),
     alt.Color('series:N', legend=None),
@@ -227,9 +209,9 @@ graph5 = stream5
 # 6. 2D Histogram Scatter Plot
 source = data.movies.url
 
-hist6 =alt.Chart(source).mark_circle(color="#0905AF").encode(
-    alt.X('IMDB_Rating:Q', bin=True, title=None),
-    alt.Y('Rotten_Tomatoes_Rating:Q', bin=True, title=None),
+hist6 =alt.Chart(source, title='Zeta-scores across Age and income Bands').mark_circle(color="#0905AF").encode(
+    alt.X('IMDB_Rating:Q', bin=True, title='Income' ),
+    alt.Y('Rotten_Tomatoes_Rating:Q', bin=True, title='Age intervals'),
     size='count()'
 ).properties(
 width=800 # controls width of bar.
@@ -306,7 +288,7 @@ source = source[['LAST_CLICK_DATE', 'LAST_CLICK_DAY', 'CLICK_COUNT']]
 
 ##, labelExpr = ( " datum.LAST_CLICK_DATE == 1 ? 'Jan' : datum.LAST_CLICK_DATE == 2 ? 'Feb'     : datum.LAST_CLICK_DATE == 3 ? 'Mar'    : datum.LAST_CLICK_DATE == 4 ? 'Apr'    : datum.LAST_CLICK_DATE == 5 ? 'May'     : datum.LAST_CLICK_DATE == 6 ? 'Jun'     : datum.LAST_CLICK_DATE == 7 ? 'Jul' : datum.LAST_CLICK_DATE == 8 ? 'Aug'     : datum.LAST_CLICK_DATE == 9 ? 'Sep'     : datum.LAST_CLICK_DATE == 10 ? 'Oct'     : datum.LAST_CLICK_DATE == 11 ? 'Nov' :  'Dec' ")
 
-hexbin= alt.Chart(source, title="Hexbin chart").mark_point(size=size*(size/2), shape=hexagon).encode(
+hexbin= alt.Chart(source, title="Click Behavior of the Day across Months​").mark_point(size=size*(size/2), shape=hexagon).encode(
     x=alt.X('xFeaturePos:N', axis=alt.Axis(title='Month', grid=False, tickOpacity=10, domainOpacity=10 
                                            , values=(1, 2,3,4,5,6,7,8,9,10,11,12)
                                            ,labelAngle= 0)),
@@ -314,7 +296,7 @@ hexbin= alt.Chart(source, title="Hexbin chart").mark_point(size=size*(size/2), s
     #stroke=alt.value('black'),
     strokeWidth=alt.value(0.2),
 
-    fill=alt.Color('mean(CLICK_COUNT):Q',  scale=alt.Scale( )), #scale = 
+    fill=alt.Color('mean(CLICK_COUNT):Q',  legend=alt.Legend(title='Average clicks')), #scale = 
     tooltip=['LAST_CLICK_DATE:O', 'LAST_CLICK_DAY:O', 'mean(CLICK_COUNT):Q']
 ).transform_calculate(
     # This field is required for the hexagonal X-Offset
@@ -336,7 +318,7 @@ graph9 = hexbin
 # 10. Layered Area chart - Transactional categories from tableua  change the colomns "series" from eg data to the categories from transactional 
 layer_df =pd.read_csv('tableau_data/Layered_graph.csv')
 
-layered10 =alt.Chart(layer_df).mark_area().encode(
+layered10 =alt.Chart(layer_df, title="Click and open distribution").mark_area().encode(
     x=alt.X("MONTH:O", axis = alt.Axis(labelAngle =0, title='Month'  )),
     y=alt.Y("sum(count):Q", axis=None, ),
     color=alt.Color("action:N",  sort=['OPENS','CLICKS'])
@@ -362,6 +344,9 @@ with col1:
     st.altair_chart(graph5, use_container_width=True)
     st.header("  ")
     st.altair_chart(graph7, use_container_width=True)
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
     st.header("  ")
     graph9
     #source_h
@@ -400,9 +385,9 @@ with col3:
         bars8
         
 
-    #graph8  -> graph8 = (bars8 +text8)
+    #graph8  -> graph8 = (bars8 +text8)S
     st.header("  ")
-    graph10
+    st.altair_chart(graph10, use_container_width=True)
     st.header("  ")
 
 
