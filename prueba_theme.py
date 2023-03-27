@@ -333,24 +333,30 @@ graph10 = layered10
 
 # 11. Predictions graph 
 forecast = pd.read_csv('competitors.csv')
-forecast = forecast.reset_index().melt('date', var_name='Company', value_name='Conversions')
-forecast = forecast[~forecast.Company.isin(['index'])]
+forecast1 = forecast.reset_index().melt('date', var_name='Company', value_name='Conversions')
+forecast1 = forecast1[~forecast1.Company.isin(['index'])]
 
-line_a=alt.Chart(forecast).mark_line().encode(
+line_a=alt.Chart(forecast1).mark_line().encode(
     x='yearmonth(date):T',
     y='mean(Conversions):Q',
     color='Company:N'
 ).transform_filter(
     alt.FieldOneOfPredicate(field='Company', oneOf=['Motel6', 'Motel6_pred'])
+).properties(
+    height=500 
+    ,width= 900
 )
 
 
-line_b = alt.Chart(forecast).mark_line().encode(
+line_b = alt.Chart(forecast1).mark_line().encode(
     x='yearmonth(date):T',
     y='mean(Conversions):Q',
     color='Company:N'
 #).transform_filter(
 #    alt.FieldOneOfPredicate(field='Company', oneOf=['Motel6', 'Motel6_pred'])
+).properties(
+    height=500 
+    ,width= 900
 )
 
 #######################
