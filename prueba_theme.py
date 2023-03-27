@@ -229,7 +229,7 @@ source = data.movies.url
 
 hist6 =alt.Chart(source).mark_circle(color="#0905AF").encode(
     alt.X('IMDB_Rating:Q', bin=True, title=None),
-    alt.Y('Rotten_Tomatoes_Rating:Q', bin=True),
+    alt.Y('Rotten_Tomatoes_Rating:Q', bin=True, title=None),
     size='count()'
 ).properties(
 width=800 # controls width of bar.
@@ -297,6 +297,11 @@ click_count =  pd.read_csv('tableau_data/click_count.csv')#, encoding='utf_16', 
 
 source = result = pd.concat([las_click_date, las_click_day,click_count ], axis=1)
 source = source[['LAST_CLICK_DATE', 'LAST_CLICK_DAY', 'CLICK_COUNT']]
+#source_h.columns = ["Month", "Day_of_the_week", "Nb_clicks"]
+#source_h.rename(columns={'LAST_CLICK_DATE': 'Month', 'LAST_CLICK_DAY': 'Day_of_the_week', 'CLICK_COUNT': 'Nb_clicks'}, inplace=True)
+
+
+
 #source["month_name"] = source["LAST_CLICK_DATE"].apply(lambda x: cal.month_name[x] )
 
 ##, labelExpr = ( " datum.LAST_CLICK_DATE == 1 ? 'Jan' : datum.LAST_CLICK_DATE == 2 ? 'Feb'     : datum.LAST_CLICK_DATE == 3 ? 'Mar'    : datum.LAST_CLICK_DATE == 4 ? 'Apr'    : datum.LAST_CLICK_DATE == 5 ? 'May'     : datum.LAST_CLICK_DATE == 6 ? 'Jun'     : datum.LAST_CLICK_DATE == 7 ? 'Jul' : datum.LAST_CLICK_DATE == 8 ? 'Aug'     : datum.LAST_CLICK_DATE == 9 ? 'Sep'     : datum.LAST_CLICK_DATE == 10 ? 'Oct'     : datum.LAST_CLICK_DATE == 11 ? 'Nov' :  'Dec' ")
@@ -359,9 +364,20 @@ with col1:
     st.altair_chart(graph7, use_container_width=True)
     st.header("  ")
     graph9
+    #source_h
     st.header("  ")
 
 with col2:
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
+    st.header("  ")
     st.header("  ")
 
 with col3:
@@ -372,7 +388,19 @@ with col3:
     st.header("  ")
     graph6
     st.header("  ")
-    graph8
+    options = st.multiselect('Select your competitor',('Competitor A', 'Competitor B'))
+
+    if 'Competitor A' in options:
+        bars8 + text8
+
+    elif 'Competitor B' in options:
+        text8
+    
+    else:
+        bars8
+        
+
+    #graph8  -> graph8 = (bars8 +text8)
     st.header("  ")
     graph10
     st.header("  ")
