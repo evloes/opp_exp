@@ -160,7 +160,7 @@ source.loc[source["weather"] == "fog" , "weather"] = "Q2"
 source.loc[source["weather"] ==  "rain" , "weather"] = "Q3"
 source.loc[source["weather"] ==  "sun", "weather"] = "Q4"
 
-bars4 = alt.Chart(source ,title= "Quarterly Categorical").mark_bar(
+bars4 = alt.Chart(source ,title= "Quarterly Categorical Comsumption").mark_bar(
     cornerRadiusTopLeft=3,
     cornerRadiusTopRight=3
 ).encode(
